@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive Pixel Cat</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            z-index: 1;
+        }
+        #controls button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #2196F3;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #controls button:hover {
+            background-color: #1976D2;
+        }
+    </style>
+    <!-- Include p5.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+</head>
+<body>
+
+    <div id="controls">
+        <button onclick="setAction('idle')">Idle</button>
+        <button onclick="setAction('walk')">Walk</button>
+        <button onclick="setAction('jump')">Jump</button>
+        <button onclick="setAction('sleep')">Sleep</button>
+        <button onclick="setAction('eat')">Eat</button>
+        <button onclick="setAction('play')">Play</button>
+        <button onclick="setAction('bored')">Bored</button>
+        <button onclick="setAction('surprised')">Surprised</button>
+        <button onclick="setAction('happy')">Happy</button>
+        <button onclick="setAction('dance')">Dance</button>
+        <button onclick="setAction('fish')">Fish</button>
+        <button onclick="setAction('talk')">Talk</button>
+        <button onclick="setAction('cute')">Cute</button>
+        <!--<button onclick="toggleColor()">Switch Color</button> -->
+        <button onclick="setTheme('clear')">Original Theme</button>
+        <button onclick="setTheme('space')">Space Theme</button>
+        <button onclick="setTheme('underwater')">Underwater Theme</button>
+    </div>
+
+    <script>
+        let cat;
+        let ball;
+        let fish;
+        let currentAction = 'idle';
+        let catColors = ['#ffcc99', '#ff9966']; // cat colors
+        let colorIndex = 0;
+        let catColor = catColors[colorIndex]; // default cat color
+
+        function setup() {
+            // canvas size with padding
+            createCanvas(300, 300).parent(document.body); 
+            noSmooth();
+            frameRate(10);
+
+            // define the cat character
+            cat = new Cat();
+
+            // define the ball for the 'play' action
+            ball = new Ball();
+
+            // define the fish for the 'fish' action
+            fish = new Fish();
+        }
+
+        function draw() {
+            background('#f0f0f0');
+
+            // update and draw the cat
+            cat.update();
+            cat.draw();
+
+            // if the action is 'play', update and draw the ball
+            if (cat.currentAction === 'play') {
+                ball.update();
+                ball.draw();
+            }
+
+            // if the action is 'fish', update and draw the fish
+            if (cat.currentAction === 'fish') {
+                fish.update();
+                fish.draw();
+            }
+        }
+
+        function setAction(action) {
+            cat.setAction(action);
+            if (action === 'play') {
+                ball.reset();
+            }
+            if (action === 'fish') {
+                fish.reset();
+            }
+        }
+
+        function toggleColor() {
+            colorIndex = (colorIndex + 1) % catColors.length;
+            catColor = catColors[colorIndex];
+        }
+
+        class Cat {
+            constructor() {
+                this.x = width / 2;
+                this.y = height / 2 + 20; // centered vertically with padding
+                this.scale = 8; // cat scale
+                this.frameIndex = 0;
+                this.frameCounter = 0;
+                this.direction = 1; // 1 for right, -1 for left
+                this.idleFrames = [this.drawIdleFrame1, this.drawIdleFrame2];
+                this.walkFrames = [this.drawWalkFrame1, this.drawWalkFrame2];
+                this.actions = {
+                    'idle': this.idleFrames,
+                    'walk': this.walkFrames,
+                    'jump': [this.drawJump],
+                    'sleep': [this.drawSleep],
+                    'eat': [this.drawEatFrame1, this.drawEatFrame2],
+                    'play': [this.drawPlayFrame1, this.drawPlayFrame2],
+                    'bored': [this.drawBored],
+                    'surprised': [this.drawSurprised],
+                    'happy': [this.drawHappy],
+                    'dance': [this.drawDanceFrame1, this.drawDanceFrame2],
+                    'fish': [this.drawFishChase],
+                    'talk': [this.drawTalk],
+                    'cute': [this.drawCuteFrame1, this.drawCuteFrame2]
+                };
+                this.currentAction = 'idle';
+                this.frames = this.actions[this.currentAction];
+                // default text for 'talk' action
+                this.randomText = "Meow"; 
+                this.jumpFrame = 0;
+                // frames for jump action
+                this.jumpDuration = 20; 
+                this.jumpYOffset = 0;
+                // to prevent unwanted centering
+                this.autoIdle = false; 
+            }
+
+            setAction(action) {
+                if (this.actions[action]) {
+                    // only reset position when 'idle' is explicitly called
+                    if (action === 'idle' && !this.autoIdle) {
+                        this.x = width / 2;
+                        this.y = height / 2 + 20;
+                    }
+                    this.currentAction = action;
+                    this.frames = this.actions[this.currentAction];
+                    this.frameIndex = 0;
+                    this.frameCounter = 0;
+                    this.autoIdle = false; // reset autoIdle flag
+
+                    if (action === 'jump') {
+                        this.jumpFrame = 0;
+                    }
+                    if (action === 'talk') {
+                        //let userText = prompt("What should the cat say?");
+                        //if (userText !== null && userText.trim() !== "") {
+                        //    this.randomText = userText;
+                        //} else {
+                        //}
+                        this.randomText = "Meow!";
+                    }
+                }
+            }
+
+            update() {
+                this.frameCounter++;
+                if (this.frameCounter >= 10) {
+                    this.frameCounter = 0;
+                    this.frameIndex = (this.frameIndex + 1) % this.frames.length;
+                    if (['jump', 'sleep', 'bored', 'surprised', 'happy', 'dance', 'talk', 'cute'].includes(this.currentAction)) {
+                        if (this.frameIndex === 0) {
+                            this.currentAction = 'idle';
+                            this.frames = this.actions[this.currentAction];
+                            // indicate automatic idle
+                            this.autoIdle = true; 
+                        }
+                    }
+                }
+
+                // For 'jump' action, simulate jump movement
+                if (this.currentAction === 'jump') {
+                    let progress = this.jumpFrame / this.jumpDuration;
+                    this.jumpYOffset = -20 * Math.sin(Math.PI * progress);
+                    this.jumpFrame++;
+                    if (this.jumpFrame >= this.jumpDuration) {
+                        this.jumpYOffset = 0;
+                        this.currentAction = 'idle';
+                        this.frames = this.actions[this.currentAction];
+                        this.frameIndex = 0;
+                        this.frameCounter = 0;
+                        this.autoIdle = true;
+                    }
+                }
+
+                // ensure the cat stays within the canvas
+                this.x = constrain(this.x, 20, width - 20);
+                this.y = constrain(this.y, 20, height - 20);
+
+                // for 'walk' action, move the cat left and right
+                if (this.currentAction === 'walk') {
+                    this.x += this.direction * 2;
+                    if (this.x >= width - 20 || this.x <= 20) {
+                        this.direction *= -1; // Change direction at edges
+                    }
+                }
+
+                // 'play' action, make the cat follow the ball
+                if (this.currentAction === 'play') {
+                    this.x += (ball.x - this.x) * 0.05;
+                    this.y += (ball.y - this.y) * 0.05;
+
+                    // collision detection with the ball
+                    let d = dist(this.x, this.y, ball.x, ball.y);
+                    if (d < 20) {
+                        ball.reset(); // Reset the ball when caught
+                    }
+                }
+
+                // for 'fish' action, make the cat chase the fish
+                if (this.currentAction === 'fish') {
+                    this.x += (fish.x - this.x) * 0.05;
+                    this.y += (fish.y - this.y) * 0.05;
+                }
+            }
+
+            draw() {
+                push();
+                translate(this.x, this.y + this.jumpYOffset);
+                scale(this.scale);
+                this.frames[this.frameIndex]();
+                pop();
+
+                // draw the speech bubble if needed
+                if (this.currentAction === 'talk') {
+                    this.drawSpeechBubble(this.randomText);
+                }
+            }
+
+            // drawing functions for each frame
+            drawIdleFrame1 = () => {
+                this.drawCatBase();
+                this.drawEyes();
+            }
+
+            drawIdleFrame2 = () => {
+                this.drawCatBase();
+                this.drawEyes(true);
+            }
+
+            drawWalkFrame1 = () => {
+                this.drawCatBase();
+                this.drawEyes();
+                this.drawLegs();
+            }
+
+            drawWalkFrame2 = () => {
+                this.drawCatBase();
+                this.drawEyes();
+                this.drawLegs(true);
+            }
+
+            drawJump = () => {
+                this.drawCatBase();
+                this.drawEyes();
+            }
+
+            drawSleep = () => {
+                this.drawCatBase();
+                this.drawClosedEyes();
+                this.drawZzz();
+            }
+
+            drawEatFrame1 = () => {
+                this.drawCatBase();
+                this.drawMouth();
+            }
+
+            drawEatFrame2 = () => {
+                this.drawCatBase();
+                this.drawMouth(true);
+            }
+
+            drawEatFrame3 = () => {
+                this.drawCatBase();
+                this.drawSadMouth();
+            }
+
+            drawPlayFrame1 = () => {
+                this.drawCatBase();
+                this.drawEyes();
+                this.drawLegs();
+            }
+
+            drawPlayFrame2 = () => {
+                this.drawCatBase();
+                this.drawEyes();
+                this.drawLegs(true);
+            }
+
+            drawBored = () => {
+                this.drawCatBase();
+                this.drawEyes();
+                this.drawSpeechBubble('...');
+            }
+
+            drawSurprised = () => {
+                this.drawCatBase();
+                this.drawSurprisedEyes();
+                this.drawMouth();
+            }
+
+            drawHappy = () => {
+                this.drawCatBase();
+                this.drawEyes();
+                this.drawSmile();
+            }
+
+            drawDanceFrame1 = () => {
+                rotate(-0.1);
+                this.drawCatBase();
+                this.drawEyes();
+            }
+
+            drawDanceFrame2 = () => {
+                rotate(0.1);
+                this.drawCatBase();
+                this.drawEyes();
+            }
+
+            drawFishChase = () => {
+                this.drawCatBase();
+                this.drawEyes();
+            }
+
+            drawTalk = () => {
+                this.drawCatBase();
+                this.drawEyes();
+                this.drawSpeechBubble(this.randomText);
+            }
+
+            drawCuteFrame1 = () => {
+                this.drawCatBase();
+                this.drawEyes();
+                this.drawHeart();
+            }
+
+            drawCuteFrame2 = () => {
+                this.drawCatBase();
+                this.drawEyes();
+                this.drawHeart();
+            }
+
+            // base cat drawing
+            drawCatBase = () => {
+                stroke(0);
+                fill(catColor); // Dynamic cat color
+                rect(-8, -8, 16, 16); // Body
+                // Ears
+                triangle(-6, -8, -4, -12, -2, -8);
+                triangle(6, -8, 4, -12, 2, -8);
+            }
+
+            drawEyes = (blink = false) => {
+                fill(0); // Eye color
+                noStroke();
+                if (blink) {
+                    rect(-4, -4, 2, 1); // left eye closed
+                    rect(2, -4, 2, 1); // right eye closed
+                } else {
+                    rect(-4, -5, 2, 2); // left eye
+                    rect(2, -5, 2, 2); // right eye
+                }
+            }
+
+            drawClosedEyes = () => {
+                fill(0);
+                noStroke();
+                rect(-4, -3, 2, 1); // left eye closed
+                rect(2, -3, 2, 1); // right eye closed
+            }
+
+            drawMouth = (open = false) => {
+                fill(0);
+                noStroke();
+                if (open) {
+                    rect(-2, 0, 4, 2);
+                } else {
+                    rect(-2, 1, 4, 1);
+                }
+            }
+
+            drawSadMouth = () => {
+                noFill();
+                stroke(0);
+                strokeWeight(1 / this.scale);
+                arc(0, 3, 4, 2, PI, TWO_PI);
+            }
+
+            drawSmile = () => {
+                noFill();
+                stroke(0);
+                strokeWeight(1 / this.scale);
+                arc(0, 2, 4, 2, 0, PI);
+            }
+
+            drawSurprisedEyes = () => {
+                fill(0);
+                noStroke();
+                ellipse(-3, -4, 2, 3);
+                ellipse(3, -4, 2, 3);
+            }
+
+            drawLegs = (alternate = false) => {
+                fill(catColor);
+                noStroke();
+                if (alternate) {
+                    rect(-6, 8, 4, 2); // left leg
+                    rect(2, 8, 4, 2); // right leg
+                } else {
+                    rect(-6, 8, 4, 2); // left leg
+                    rect(0, 8, 4, 2); // right leg
+                }
+            }
+
+            drawZzz = () => {
+                fill(0);
+                noStroke();
+                textSize(2);
+                // adjusted position to prevent cropping
+                text('Z', -10, -15); 
+            }
+
+            drawSpeechBubble = (textContent) => {
+                push();
+                // adjust position as needed
+                translate(this.x, this.y + this.jumpYOffset - 80); 
+                fill(255);
+                stroke(0);
+                let bubbleWidth = textContent.length * 8 + 20;
+                let bubbleHeight = 30;
+                rect(-bubbleWidth / 2, -bubbleHeight / 2, bubbleWidth, bubbleHeight, 5);
+                fill(0);
+                noStroke();
+                textSize(12);
+                textAlign(CENTER, CENTER);
+                text(textContent, 0, 0);
+                pop();
+            }
+
+            drawHeart = () => {
+                push();
+                // position above the cat
+                translate(0, -12); 
+                fill('#ff3366');
+                noStroke();
+                beginShape();
+                vertex(0, -2);
+                bezierVertex(-2, -5, -6, -5, -6, -1);
+                bezierVertex(-6, 2, -3, 4, 0, 6);
+                bezierVertex(3, 4, 6, 2, 6, -1);
+                bezierVertex(6, -5, 2, -5, 0, -2);
+                endShape(CLOSE);
+                pop();
+            }
+        }
+
+        class Ball {
+            constructor() {
+                // ball size
+                this.radius = 10; 
+                this.reset();
+            }
+
+            reset() {
+                this.x = random(this.radius, width - this.radius);
+                this.y = random(this.radius, height - this.radius);
+                this.vx = random(-2, 2);
+                this.vy = random(-2, 2);
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // bounce off the edges
+                if (this.x < this.radius || this.x > width - this.radius) {
+                    this.vx *= -1;
+                }
+                if (this.y < this.radius || this.y > height - this.radius) {
+                    this.vy *= -1;
+                }
+            }
+
+            draw() {
+                push();
+                fill('#ff5722');
+                noStroke();
+                ellipse(this.x, this.y, this.radius * 2);
+                pop();
+            }
+        }
+
+        class Fish {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = -20;
+                this.y = random(50, height - 50);
+                this.vx = 2;
+            }
+
+            update() {
+                this.x += this.vx;
+
+                // reset position if off-screen
+                if (this.x > width + 20) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                push();
+                translate(this.x, this.y);
+                scale(2);
+                fill('#00bcd4');
+                stroke(0);
+                triangle(0, 0, -10, -5, -10, 5); // tail
+                ellipse(0, 0, 15, 10); // body
+                fill(255);
+                noStroke();
+                ellipse(5, -2, 3, 3); // eye
+                fill(0);
+                ellipse(5, -2, 1, 1); // pupil
+                pop();
+            }
+        }
+
+
+        // theme area
+        let currentAudio = null;
+
+        let themes = {
+            'space': { backgroundColor: '#1a1a1a', catColor: '#ffffff', backgroundMusic: 'audio/space.mp3' },
+            'underwater': { backgroundColor: '#00bcd4', catColor: '#ffcc99', backgroundMusic: 'audio/underwater.mp3' },
+            'clear': { backgroundColor: '#f0f0f0', catColor: catColors[0], backgroundMusic: null }
+        };
+
+        function setTheme(themeName) {
+            let theme = themes[themeName];
+            document.body.style.backgroundColor = theme.backgroundColor;
+            catColor = theme.catColor;
+            playMusic(theme.backgroundMusic);
+        }
+
+        function playMusic(musicFile) {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            if (musicFile) {
+                currentAudio = new Audio(musicFile);
+                currentAudio.loop = true;
+                currentAudio.play();
+            }
+        }
+    </script>
+
+</body>
+</html>
+
