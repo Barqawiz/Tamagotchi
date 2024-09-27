@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .dashboard button {
+            padding: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            background-color: #4CAF50; /* Cool, soft green */
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: all 0.4s ease;
+        }
+
+        .dashboard button:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.4s ease;
+            transform: translateX(-150%) translateY(-150%) rotate(45deg);
+            z-index: 0;
+        }
+
+        .dashboard button:hover:before {
+            transform: translateX(0%) translateY(0%) rotate(45deg);
+        }
+
+        .dashboard button:hover {
+            background-color: #43A047; /* Darker green on hover */
+            color: #fff;
+        }
+
+        .dashboard button:active {
+            background-color: #388E3C; /* Even darker green on click */
+        }
+
+        .dashboard button span {
+            position: relative;
+            z-index: 2;
+        }
+
+        @media(max-width: 600px) {
+            .dashboard button {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <button onclick="window.location.href='cat.html'"><span>Cat</span></button>
+        <button onclick="window.location.href='plant.html'"><span>Plant</span></button>
+        <!-- Add more buttons like this when needed -->
+    </div>
+
+    
+</body>
+</html>
