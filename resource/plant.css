@@ -1,0 +1,50 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff; /* start with day background */
+    color: #000000;
+    font-family: Arial, sans-serif;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+#container {
+    text-align: center;
+    padding-top: 50px;
+}
+
+#plantCanvas {
+    background-color: #87CEEB; /* sky blue for day */
+    border: 2px solid #000;
+    border-radius: 10px;
+}
+
+#controls {
+    margin-top: 20px;
+}
+
+button {
+    background-color: #ff66cc; /* cute button color */
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #ff85d5;
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+#textDisplay {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #ffcc00; /* yellowish color for text */
+}
