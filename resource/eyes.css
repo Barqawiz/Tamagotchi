@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #000000;
+    font-family: Arial, sans-serif;
+}
+
+#container {
+    text-align: center;
+    padding-top: 50px;
+}
+
+#eyesCanvas {
+    background-color: #eeeeee;
+    border: 2px solid #000;
+    border-radius: 10px;
+}
+
+#controls {
+    margin-top: 20px;
+}
+
+button {
+    background-color: #ff66cc;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #ff85d5;
+}
