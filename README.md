@@ -11,3 +11,13 @@ This project is inspired by the classic Tamagotchi device, featuring a virtual c
 
 Feel free to customize the project, or expand it for AI assistant interaction.
 
+## Characters:
+
+### Eyes
+<img src="images/device1_eyes.png" width="400px" />
+
+### Cat
+<img src="images/device1_cat.png" width="400px" />
+
+## Plant
+<img src="images/device2_plant.png" width="400px" />
