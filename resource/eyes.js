@@ -43,15 +43,18 @@ function draw(timestamp) {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // update lookAngle globally for both eyes
+    // update lookAngle globally
     if (isLookingAround && !lookPause) {
-        lookAngle += 0.05 * lookDirection; // increased speed
-        if (Math.abs(lookAngle) > Math.PI / 4) { // limit angle to ±45 degrees
+         // speed
+        lookAngle += 0.01 * lookDirection;
+        if (Math.abs(lookAngle) > Math.PI / 4) { 
+            // limit angle to ±45 degrees
             lookPause = true;
             setTimeout(() => {
                 lookPause = false;
-                lookDirection *= -1; // change direction after pause
-            }, 500); // shorter pause for smoother movement
+                // change direction after pause
+                lookDirection *= -1; 
+            }, 500 /*shorter pause for smoother movement*/); 
         }
     }
 
