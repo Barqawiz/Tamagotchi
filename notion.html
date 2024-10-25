@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Notion AI Assistant</title>
+    <!-- main style -->
+    <link rel="stylesheet" type="text/css" href="resource/notion.css">
+    <!-- p5.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <!-- google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Whisper&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+</head>
+<body>
+
+    <div id="controls">
+        <button onclick="setAction('idle')">Idle</button>
+        <button onclick="setAction('thinking')">Thinking</button>
+        <button onclick="setAction('typing')">Typing</button>
+        <button onclick="setAction('error')">Error</button>
+        <button onclick="setAction('satisfaction')">Satisfaction</button>
+        <button onclick="setAction('curious')">Curious</button>
+        <button onclick="setAction('surprised')">Surprised</button>
+        <button onclick="setAction('uncertain')">Uncertain</button>
+        <button onclick="setAction('confident')">Confident</button>
+        <button onclick="setAction('excited')">Excited</button>
+    </div>
+
+    <!-- main js -->
+    <script src="resource/notion.js"></script>
+
+</body>
+</html>

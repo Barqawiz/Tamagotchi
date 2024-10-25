@@ -1,0 +1,30 @@
+body {
+    text-align: center;
+    background-color: #ffffff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    overflow: hidden;
+}
+
+#controls {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    z-index: 1;
+}
+
+#controls button {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#controls button:hover {
+    background-color: #333333;
+}
