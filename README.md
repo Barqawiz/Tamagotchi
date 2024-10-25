@@ -16,6 +16,11 @@ Feel free to customize the project, or expand it for AI assistant interaction.
 ### Eyes
 <img src="images/device1_eyes.png" width="400px" />
 
+
+### Notion
+<img src="images/device2_notion.png" width="400px" />
+
+
 ### Cat
 <img src="images/device1_cat.png" width="400px" />
 
