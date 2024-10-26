@@ -5,7 +5,7 @@
 let notionAI;
 let sketchStarted = false;
 
-// Load the 'Whisper' font and start the sketch after it's loaded
+// Whisper font
 WebFont.load({
     google: {
         families: ['Whisper']
@@ -31,7 +31,7 @@ function sketch(p) {
         notionAI.draw();
     };
 
-    // Expose setAction to the global scope so it can be called from HTML
+    // expose setAction to the global scope
     window.setAction = function(action) {
         notionAI.setAction(action);
     };
@@ -44,7 +44,7 @@ function sketch(p) {
             this.scaleFactor = 2;
             this.frameCount = 0;
             this.blinkTimer = 0;
-            this.blinkInterval = p.random(200, 300);
+            this.blinkInterval = p.random(100, 200);
             this.currentAction = 'idle';
             this.browWaveOffset = 0;
             this.browWaveDirection = 1;
@@ -81,7 +81,7 @@ function sketch(p) {
                     if (this.blinkTimer > this.blinkInterval + 5) {
                         this.eyeBlink = false;
                         this.blinkTimer = 0;
-                        this.blinkInterval = this.p.random(200, 300);
+                        this.blinkInterval = this.p.random(100, 200);
                     }
                 }
             }
