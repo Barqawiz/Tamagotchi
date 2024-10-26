@@ -1,3 +1,8 @@
+/**
+ * MIT License
+ * Copyright (c) 2024 github.com/Barqawiz/
+ * **/
+
 // get the canvas and context
 const canvas = document.getElementById('eyesCanvas');
 const ctx = canvas.getContext('2d');

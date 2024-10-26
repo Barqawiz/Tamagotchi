@@ -1,3 +1,7 @@
+/**
+ * MIT License
+ * Copyright (c) 2024 github.com/Barqawiz/
+ * **/
 let notionAI;
 let sketchStarted = false;
 
