@@ -1,3 +1,7 @@
+/**
+ * MIT License
+ * Copyright (c) 2024 github.com/Barqawiz/
+ * **/
 const canvas = document.getElementById('plantCanvas');
 const ctx = canvas.getContext('2d');
 
