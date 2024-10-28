@@ -26,3 +26,14 @@ Feel free to customize the project, or expand it for AI assistant interaction.
 
 ## Plant
 <img src="images/device2_plant.png" width="400px" />
+
+## How to Connect to Chatbot:
+
+Call `setAction` based on the AI model’s status or reactions. For example:
+
+- `setAction('curious')` if the AI’s response includes a question.
+- `setAction('excited')` if the response shows excitement.
+- `setAction('speaking')` for general replies.
+
+Check the [demo](https://barqawiz.github.io/Tamagotchi/) for more action details.
+
